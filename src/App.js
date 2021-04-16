@@ -7,6 +7,7 @@ import { saveAs } from 'file-saver';
 function App() {
   const [name, setName] = useState('Константин Константинопольский');
   const [title, setTitle] = useState('пользователь приложения');
+  const [shouldMirror, setShouldMirror] = useState(false);
 
   return (
     <div className="app">
@@ -20,7 +21,11 @@ function App() {
         <form className="form" onSubmit={(event) => {
           event.preventDefault();
 
-          domtoimage.toBlob(document.getElementById('preview'))
+          domtoimage.toBlob(document.getElementById('preview'), {
+              style: {
+                  transform: `scaleX(${shouldMirror ? -1 : 1})`
+              }
+          })
               .then((blob) => {
                 saveAs(blob, 'background.png');
               });
@@ -46,6 +51,15 @@ function App() {
                 }}
                 name="title"
             />
+          </label>
+          <label className="form__label">
+              <input
+                  type="checkbox"
+                  checked={shouldMirror}
+                  onChange={() => {
+                      setShouldMirror(!shouldMirror);
+                  }}
+              /> Отразить картинку при сохранении
           </label>
           <div className="form__submit-wrapper">
             <input className="form__submit" type="submit" value="Сохранить"/>
